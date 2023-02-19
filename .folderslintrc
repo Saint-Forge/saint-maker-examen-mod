@@ -1,0 +1,15 @@
+{
+  "root": "src", 
+  "rules": [
+    "components/*",
+    "constants",
+    "pages/*",
+    "state",
+    "styles",
+    "tests",
+    "tests/utils",
+    "tests/utils/habits",
+    "utils",
+    "utils/habits"
+   ]
+}

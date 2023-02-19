@@ -1,0 +1,4 @@
+{
+    "ignoreUnresolved": ["virtual:pwa-register"],
+    "ignoreUnused": ["react-icons"]
+}

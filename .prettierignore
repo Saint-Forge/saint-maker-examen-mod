@@ -1,0 +1,10 @@
+*.json
+vite.config.ts
+yarn.lock
+index.html
+README.md
+*.d.ts
+.folderslintrc
+.husky/*
+custom-rules/*
+dist/*
