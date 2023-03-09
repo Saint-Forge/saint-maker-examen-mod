@@ -4,6 +4,17 @@ Created by [Cendy](https://www.upwork.com/freelancers/~01b3ada479ef818cc7)
 
 Modified by Krysztof
 
+
+
+bundle data into state
+cleanup readme
+setup default select menu
+
+
+
+
+
+
 <details><summary>Description</summary>
 <p>
 
