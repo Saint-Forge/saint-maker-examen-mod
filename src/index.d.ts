@@ -4,11 +4,10 @@ interface Prayer {
   text: string
 }
 
-interface Habit {
+interface Question {
   id: string
-  name: string
-  days: boolean[]
-  editing: boolean
+  text: string
+  checked: boolean
 }
 
 interface BeforeInstallPromptEvent extends Event {

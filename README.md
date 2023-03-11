@@ -6,13 +6,21 @@ Modified by Krysztof
 
 
 
-bundle data into state
+    bundle data into state
+    set up editing system
+    Change "sort" to "checked, unchecked, all" button
+    add in "delete question" option
+    add in back button  
 cleanup readme
-setup default select menu
+    setup default select menu
+Populate with questions
 
 
-
-
+Mod template modifications
+-prune folderslint
+-add back in redux and some utils
+-maybe retire layout
+-add back in missing packages
 
 
 <details><summary>Description</summary>
