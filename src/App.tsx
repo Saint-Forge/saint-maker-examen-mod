@@ -82,14 +82,14 @@ export const App = (): JSX.Element => {
         setCurrentFilter(nextFilter)
         const currentQuestions = [...questions.data]
         switch (nextFilter) {
-            case 0:
-                setDisplayedQuestions(currentQuestions)
-                break
             case 1:
                 setDisplayedQuestions(currentQuestions.filter((dQuestion) => dQuestion.checked === true))
                 break
             case 2:
                 setDisplayedQuestions(currentQuestions.filter((dQuestion) => dQuestion.checked === false))
+                break
+            default:
+                setDisplayedQuestions(currentQuestions)
                 break
         }
     }
@@ -151,7 +151,7 @@ export const App = (): JSX.Element => {
                             direction="row"
                             justifyContent="center"
                             pb="2"
-                            key={index}
+                            key={question.id}
                             onMouseDown={() => (editing ? undefined : toggleQuestion(question))}
                         >
                             <Box
