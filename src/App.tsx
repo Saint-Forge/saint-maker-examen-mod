@@ -1,5 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import { Heading, Button, Flex, Box, Checkbox, Input, Text, IconButton, HStack } from '@chakra-ui/react'
+import { Heading, Button, Flex, Box, Checkbox, Input, Text, IconButton, HStack, Grid, GridItem } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { BsSortUp, BsArrowReturnLeft, BsPencil, BsSortDown, BsTrashFill, BsArrowLeft } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
@@ -44,7 +44,11 @@ export const App = (): JSX.Element => {
     }
 
     const generateDefaultQuestions = (): Question[] =>
-        defaultQuestions.map((defaultQuestion) => ({ ...defaultQuestion, id: nanoid(16) }))
+        defaultQuestions.map((questionText: string) => ({
+            id: nanoid(16),
+            text: questionText,
+            checked: false,
+        }))
 
     const setDefaultQuestions = () => {
         dispatch(editAllQuestions(generateDefaultQuestions()))
@@ -106,6 +110,7 @@ export const App = (): JSX.Element => {
                     {/* Why: placeholder element to maintain spacing */}
                 </Box>
             </HStack>
+
             <Flex wrap="wrap" direction="row" pt="2" justifyContent="center" gap="2">
                 <Button leftIcon={<BsSortUp />} variant="outline" onClick={toggleFilter}>
                     View {filters[currentFilter]}
@@ -144,8 +149,9 @@ export const App = (): JSX.Element => {
                     />
                 </Flex>
             )}
+
             <Box pt="2">
-                <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p="2">
+                <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p="2" maxHeight="450px" overflowY="scroll">
                     {displayedQuestions.map((question, index) => (
                         <Flex
                             direction="row"
@@ -185,6 +191,7 @@ export const App = (): JSX.Element => {
                     ))}
                 </Box>
             </Box>
+
             <AlertModal
                 isOpen={isOpen}
                 onClose={closeModal}
