@@ -4,12 +4,10 @@
     "components/*",
     "constants",
     "pages/*",
-    "state",
+    "redux/",
+    "redux/slice",
     "styles",
     "tests",
-    "tests/utils",
-    "tests/utils/habits",
-    "utils",
-    "utils/habits"
+    "utils"
    ]
 }
