@@ -7,7 +7,7 @@ interface Prayer {
 interface Question {
   id: string
   text: string
-  checked: boolean
+  amount: number
 }
 
 interface BeforeInstallPromptEvent extends Event {
