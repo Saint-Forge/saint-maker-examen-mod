@@ -1,7 +1,32 @@
 /* eslint-disable react/no-children-prop */
-import { Heading, Button, Flex, Box, Checkbox, Input, Text, IconButton, HStack, Grid, GridItem } from '@chakra-ui/react'
+import {
+    Heading,
+    Button,
+    Flex,
+    Box,
+    Checkbox,
+    Input,
+    Text,
+    IconButton,
+    HStack,
+    Grid,
+    GridItem,
+    VStack,
+    Circle,
+} from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
-import { BsSortUp, BsArrowReturnLeft, BsPencil, BsSortDown, BsTrashFill, BsArrowLeft } from 'react-icons/bs'
+import {
+    BsSortUp,
+    BsArrowReturnLeft,
+    BsPencil,
+    BsSortDown,
+    BsTrashFill,
+    BsArrowLeft,
+    BsArrowUpCircle,
+    BsArrowDownCircle,
+    BsArrowLeftCircle,
+    BsArrowRightCircle,
+} from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { nanoid } from '@reduxjs/toolkit'
@@ -16,7 +41,7 @@ import { AlertModal } from '~components/AlertModal'
 
 import defaultQuestions from './defaultQuestions.json'
 
-const filters = ['Checked', 'Unchecked', 'All']
+const filters = ['Show Selected', 'Show Unselected', 'Show All']
 const FIRST_TIME_VISITOR = 'FIRST_TIME_VISITOR'
 
 export const App = (): JSX.Element => {
@@ -47,7 +72,7 @@ export const App = (): JSX.Element => {
         defaultQuestions.map((questionText: string) => ({
             id: nanoid(16),
             text: questionText,
-            checked: false,
+            amount: 0,
         }))
 
     const setDefaultQuestions = () => {
@@ -61,7 +86,7 @@ export const App = (): JSX.Element => {
             addQuestion({
                 id: nanoid(16),
                 text: addInputRef.current.value,
-                checked: false,
+                amount: 0,
             }),
         )
         addInputRef.current.value = ''
@@ -69,13 +94,11 @@ export const App = (): JSX.Element => {
     const removeQuestionHandler = (id: string) => {
         dispatch(deleteQuestion(id))
     }
-    const toggleQuestion = (question: Question) => {
-        setCurrentFilter(0)
-        setDisplayedQuestions(questions.data)
-        dispatch(editQuestion({ ...question, checked: !question.checked }))
+    const changeAmount = (question: Question, amount: number) => {
+        dispatch(editQuestion({ ...question, amount: amount }))
     }
     const resetQuestions = () => {
-        const resetQuestions = questions.data.map((question: Question) => ({ ...question, checked: false }))
+        const resetQuestions = questions.data.map((question: Question) => ({ ...question, amount: 0 }))
         dispatch(editAllQuestions(resetQuestions))
     }
     const editQuestionText = (question: Question, newText: string) => {
@@ -87,10 +110,10 @@ export const App = (): JSX.Element => {
         const currentQuestions = [...questions.data]
         switch (nextFilter) {
             case 1:
-                setDisplayedQuestions(currentQuestions.filter((dQuestion) => dQuestion.checked === true))
+                setDisplayedQuestions(currentQuestions.filter((dQuestion) => dQuestion.amount > 0))
                 break
             case 2:
-                setDisplayedQuestions(currentQuestions.filter((dQuestion) => dQuestion.checked === false))
+                setDisplayedQuestions(currentQuestions.filter((dQuestion) => dQuestion.amount === 0))
                 break
             default:
                 setDisplayedQuestions(currentQuestions)
@@ -113,7 +136,7 @@ export const App = (): JSX.Element => {
 
             <Flex wrap="wrap" direction="row" pt="2" justifyContent="center" gap="2">
                 <Button leftIcon={<BsSortUp />} variant="outline" onClick={toggleFilter}>
-                    View {filters[currentFilter]}
+                    {filters[currentFilter]}
                 </Button>
                 <Button onClick={resetQuestions} leftIcon={<BsArrowReturnLeft />} variant="outline">
                     Reset
@@ -153,13 +176,7 @@ export const App = (): JSX.Element => {
             <Box pt="2">
                 <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p="2" maxHeight="450px" overflowY="scroll">
                     {displayedQuestions.map((question, index) => (
-                        <Flex
-                            direction="row"
-                            justifyContent="center"
-                            pb="2"
-                            key={question.id}
-                            onMouseDown={() => (editing ? undefined : toggleQuestion(question))}
-                        >
+                        <Flex direction="row" justifyContent="space-between" pb="2" key={question.id}>
                             <Box
                                 display="inline-flex"
                                 w="100%"
@@ -167,8 +184,9 @@ export const App = (): JSX.Element => {
                                 borderRadius="lg"
                                 overflow="hidden"
                                 p="2"
+                                justifyContent="space-between"
+                                alignItems="center"
                             >
-                                <Checkbox size="lg" mr="2" colorScheme="red" isChecked={question.checked} />
                                 {editing ? (
                                     <Input
                                         autoFocus={index === 0}
@@ -186,6 +204,26 @@ export const App = (): JSX.Element => {
                                         icon={<BsTrashFill />}
                                     />
                                 )}
+                                <Box ml="2">
+                                    <HStack>
+                                        <IconButton
+                                            variant="outline"
+                                            aria-label="Decrease"
+                                            icon={<BsArrowLeftCircle />}
+                                            disabled={question.amount === 0}
+                                            onClick={() => changeAmount(question, question.amount - 1)}
+                                        />
+                                        <Circle borderWidth="1px" size="40px" color="white">
+                                            {question.amount}
+                                        </Circle>
+                                        <IconButton
+                                            colorScheme="red"
+                                            aria-label="Increase"
+                                            icon={<BsArrowRightCircle />}
+                                            onClick={() => changeAmount(question, question.amount + 1)}
+                                        />
+                                    </HStack>
+                                </Box>
                             </Box>
                         </Flex>
                     ))}
