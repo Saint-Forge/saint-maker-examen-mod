@@ -47,6 +47,10 @@ https://github.com/Saint-Maker/prayer-book-template-a#readme
 - Fix map index issue
 - Cleanup readme
 
+03/17/23
+- improve UX
+- change checkbox to counter
+
 Backlog
 - none at the moment
 
