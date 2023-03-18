@@ -126,7 +126,7 @@ export const App = (): JSX.Element => {
     }
     return (
         <Layout>
-            <Grid templateRows="auto auto minMax(calc(100vh - 100px), auto)" height="calc(100vh - 1rem)">
+            <Grid templateRows="43px min-content minMax(350px, auto)" height="calc(100vh - 1rem)">
                 <GridItem>
                     <HStack justifyContent="space-between">
                         <Box flex="1">
