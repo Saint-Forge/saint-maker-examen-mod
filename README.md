@@ -50,6 +50,8 @@ https://github.com/Saint-Maker/prayer-book-template-a#readme
 03/17/23
 - improve UX
 - change checkbox to counter
+- eliminate refresh on counter change
+- fix height issue when showing selected questions
 
 Backlog
 - none at the moment
