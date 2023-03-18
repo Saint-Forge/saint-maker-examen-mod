@@ -122,113 +122,128 @@ export const App = (): JSX.Element => {
     }
     return (
         <Layout>
-            <HStack justifyContent="space-between">
-                <Box flex="1">
-                    <IconButton onClick={() => navigate(-1)} aria-label="Menu" icon={<BsArrowLeft />} />
-                </Box>
-                <Box flex="1" textAlign="center">
-                    <Heading as="h1">Examen</Heading>
-                </Box>
-                <Box flex="1" textAlign="right">
-                    {/* Why: placeholder element to maintain spacing */}
-                </Box>
-            </HStack>
-
-            <Flex wrap="wrap" direction="row" pt="2" justifyContent="center" gap="2">
-                <Button leftIcon={<BsSortUp />} variant="outline" onClick={toggleFilter}>
-                    {filters[currentFilter]}
-                </Button>
-                <Button onClick={resetQuestions} leftIcon={<BsArrowReturnLeft />} variant="outline">
-                    Reset
-                </Button>
-                {editing ? (
-                    <Button
-                        onClick={() => setEditing(!editing)}
-                        leftIcon={<RiSaveLine />}
-                        variant="solid"
-                        colorScheme="green"
-                    >
-                        Save
-                    </Button>
-                ) : (
-                    <Button
-                        onClick={() => setEditing(!editing)}
-                        leftIcon={<BsPencil />}
-                        variant={'outline'}
-                        colorScheme={'gray'}
-                    >
-                        Add/Edit Questions
-                    </Button>
-                )}
-            </Flex>
-            {editing && (
-                <Flex direction="row" pt="2">
-                    <Input placeholder="Add a new question" ref={addInputRef} />
-                    <IconButton
-                        ml="2"
-                        onClick={addQuestionHandler}
-                        aria-label="Add question"
-                        icon={<AiOutlinePlusCircle />}
-                    />
-                </Flex>
-            )}
-
-            <Box pt="2">
-                <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p="2" maxHeight="450px" overflowY="scroll">
-                    {displayedQuestions.map((question, index) => (
-                        <Flex direction="row" justifyContent="space-between" pb="2" key={question.id}>
-                            <Box
-                                display="inline-flex"
-                                w="100%"
-                                borderWidth="1px"
-                                borderRadius="lg"
-                                overflow="hidden"
-                                p="2"
-                                justifyContent="space-between"
-                                alignItems="center"
+            <Grid templateRows="auto auto minMax(350px, auto)" height="calc(100vh - 1rem)">
+                <GridItem>
+                    <HStack justifyContent="space-between">
+                        <Box flex="1">
+                            <IconButton onClick={() => navigate(-1)} aria-label="Menu" icon={<BsArrowLeft />} />
+                        </Box>
+                        <Box flex="1" textAlign="center">
+                            <Heading as="h1">Examen</Heading>
+                        </Box>
+                        <Box flex="1" textAlign="right">
+                            {/* Why: placeholder element to maintain spacing */}
+                        </Box>
+                    </HStack>
+                </GridItem>
+                <GridItem>
+                    <Flex wrap="wrap" direction="row" pt="2" justifyContent="center" gap="2">
+                        <Button leftIcon={<BsSortUp />} variant="outline" onClick={toggleFilter}>
+                            {filters[currentFilter]}
+                        </Button>
+                        <Button onClick={resetQuestions} leftIcon={<BsArrowReturnLeft />} variant="outline">
+                            Reset
+                        </Button>
+                        {editing ? (
+                            <Button
+                                onClick={() => setEditing(!editing)}
+                                leftIcon={<RiSaveLine />}
+                                variant="solid"
+                                colorScheme="green"
                             >
-                                {editing ? (
-                                    <Input
-                                        autoFocus={index === 0}
-                                        defaultValue={question.text}
-                                        onBlur={(e) => editQuestionText(question, e.target.value)}
-                                    />
-                                ) : (
-                                    <Text>{question.text}</Text>
-                                )}
-                                {editing && (
-                                    <IconButton
-                                        ml="2"
-                                        onClick={() => removeQuestionHandler(question.id)}
-                                        aria-label="Remove question"
-                                        icon={<BsTrashFill />}
-                                    />
-                                )}
-                                <Box ml="2">
-                                    <HStack>
-                                        <IconButton
-                                            variant="outline"
-                                            aria-label="Decrease"
-                                            icon={<BsArrowLeftCircle />}
-                                            disabled={question.amount === 0}
-                                            onClick={() => changeAmount(question, question.amount - 1)}
-                                        />
-                                        <Circle borderWidth="1px" size="40px" color="white">
-                                            {question.amount}
-                                        </Circle>
-                                        <IconButton
-                                            colorScheme="red"
-                                            aria-label="Increase"
-                                            icon={<BsArrowRightCircle />}
-                                            onClick={() => changeAmount(question, question.amount + 1)}
-                                        />
-                                    </HStack>
-                                </Box>
-                            </Box>
+                                Save
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={() => setEditing(!editing)}
+                                leftIcon={<BsPencil />}
+                                variant={'outline'}
+                                colorScheme={'gray'}
+                            >
+                                Add/Edit Questions
+                            </Button>
+                        )}
+                    </Flex>
+                    {editing && (
+                        <Flex direction="row" pt="2">
+                            <Input placeholder="Add a new question" ref={addInputRef} />
+                            <IconButton
+                                ml="2"
+                                onClick={addQuestionHandler}
+                                aria-label="Add question"
+                                icon={<AiOutlinePlusCircle />}
+                            />
                         </Flex>
-                    ))}
-                </Box>
-            </Box>
+                    )}
+                </GridItem>
+                <GridItem>
+                    <Box pt="2" height="100%">
+                        <Box
+                            borderWidth="1px"
+                            borderRadius="lg"
+                            overflow="hidden"
+                            p="2"
+                            height="100%"
+                            overflowY="scroll"
+                        >
+                            {displayedQuestions.map((question, index) => (
+                                <Flex direction="row" justifyContent="space-between" pb="2" key={question.id}>
+                                    <Box
+                                        display="inline-flex"
+                                        w="100%"
+                                        borderWidth="1px"
+                                        borderRadius="lg"
+                                        overflow="hidden"
+                                        p="2"
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                    >
+                                        {editing ? (
+                                            <>
+                                                <IconButton
+                                                    mr="2"
+                                                    onClick={() => removeQuestionHandler(question.id)}
+                                                    aria-label="Remove question"
+                                                    icon={<BsTrashFill />}
+                                                />
+                                                <Input
+                                                    autoFocus={index === 0}
+                                                    defaultValue={question.text}
+                                                    onBlur={(e) => editQuestionText(question, e.target.value)}
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Text>{question.text}</Text>
+                                                <Box ml="2">
+                                                    <HStack>
+                                                        <IconButton
+                                                            variant="outline"
+                                                            aria-label="Decrease"
+                                                            icon={<BsArrowLeftCircle />}
+                                                            disabled={question.amount === 0}
+                                                            onClick={() => changeAmount(question, question.amount - 1)}
+                                                        />
+                                                        <Circle borderWidth="1px" size="40px" color="white">
+                                                            {question.amount}
+                                                        </Circle>
+                                                        <IconButton
+                                                            colorScheme="red"
+                                                            aria-label="Increase"
+                                                            icon={<BsArrowRightCircle />}
+                                                            onClick={() => changeAmount(question, question.amount + 1)}
+                                                        />
+                                                    </HStack>
+                                                </Box>
+                                            </>
+                                        )}
+                                    </Box>
+                                </Flex>
+                            ))}
+                        </Box>
+                    </Box>
+                </GridItem>
+            </Grid>
 
             <AlertModal
                 isOpen={isOpen}
