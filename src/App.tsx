@@ -60,7 +60,8 @@ export const App = (): JSX.Element => {
     }, [])
 
     useEffect(() => {
-        setDisplayedQuestions(questions.data)
+        if (displayedQuestions.length === 0) setDisplayedQuestions(questions.data)
+        filterQuestions(currentFilter)
     }, [questions])
 
     const closeModal = () => {
@@ -107,8 +108,11 @@ export const App = (): JSX.Element => {
     const toggleFilter = () => {
         const nextFilter = currentFilter === 2 ? 0 : currentFilter + 1
         setCurrentFilter(nextFilter)
+        filterQuestions(nextFilter)
+    }
+    const filterQuestions = (filter: number) => {
         const currentQuestions = [...questions.data]
-        switch (nextFilter) {
+        switch (filter) {
             case 1:
                 setDisplayedQuestions(currentQuestions.filter((dQuestion) => dQuestion.amount > 0))
                 break
@@ -122,7 +126,7 @@ export const App = (): JSX.Element => {
     }
     return (
         <Layout>
-            <Grid templateRows="auto auto minMax(350px, auto)" height="calc(100vh - 1rem)">
+            <Grid templateRows="43px min-content minMax(350px, auto)" height="calc(100vh - 1rem)">
                 <GridItem>
                     <HStack justifyContent="space-between">
                         <Box flex="1">
