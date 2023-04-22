@@ -149,7 +149,11 @@ export const App = (): JSX.Element => {
                         <Button leftIcon={<BsSortUp />} variant="outline" onClick={toggleFilter}>
                             {filters[currentFilter]}
                         </Button>
-                        <Button onClick={() => setIsConfirmResetModalOpen(true)} leftIcon={<BsArrowReturnLeft />} variant="outline">
+                        <Button
+                            onClick={() => setIsConfirmResetModalOpen(true)}
+                            leftIcon={<BsArrowReturnLeft />}
+                            variant="outline"
+                        >
                             Reset
                         </Button>
                         {editing ? (
