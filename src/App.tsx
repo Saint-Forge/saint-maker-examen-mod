@@ -54,6 +54,9 @@ export const App = (): JSX.Element => {
     const [displayedQuestions, setDisplayedQuestions] = useState<Question[]>(questions.data)
     const [isFirstVisit, _setIsFirstVisit] = useState((ls.get(FIRST_TIME_VISITOR) ?? 'true') === 'true')
     const [isOpen, setIsOpen] = useState(isFirstVisit)
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false)
+    const [isConfirmResetModalOpen, setIsConfirmResetModalOpen] = useState(false)
+    const [selectedQuestionId, setSelectedQuestionId] = useState('')
 
     useEffect(() => {
         dispatch(getQuestions())
@@ -92,8 +95,9 @@ export const App = (): JSX.Element => {
         )
         addInputRef.current.value = ''
     }
-    const removeQuestionHandler = (id: string) => {
-        dispatch(deleteQuestion(id))
+    const removeQuestion = (id: string) => {
+        setSelectedQuestionId(id)
+        setIsConfirmDeleteModalOpen(true)
     }
     const changeAmount = (question: Question, amount: number) => {
         dispatch(editQuestion({ ...question, amount: amount }))
@@ -145,7 +149,11 @@ export const App = (): JSX.Element => {
                         <Button leftIcon={<BsSortUp />} variant="outline" onClick={toggleFilter}>
                             {filters[currentFilter]}
                         </Button>
-                        <Button onClick={resetQuestions} leftIcon={<BsArrowReturnLeft />} variant="outline">
+                        <Button
+                            onClick={() => setIsConfirmResetModalOpen(true)}
+                            leftIcon={<BsArrowReturnLeft />}
+                            variant="outline"
+                        >
                             Reset
                         </Button>
                         {editing ? (
@@ -206,12 +214,11 @@ export const App = (): JSX.Element => {
                                             <>
                                                 <IconButton
                                                     mr="2"
-                                                    onClick={() => removeQuestionHandler(question.id)}
+                                                    onClick={() => removeQuestion(question.id)}
                                                     aria-label="Remove question"
                                                     icon={<BsTrashFill />}
                                                 />
                                                 <Input
-                                                    autoFocus={index === 0}
                                                     defaultValue={question.text}
                                                     onBlur={(e) => editQuestionText(question, e.target.value)}
                                                 />
@@ -257,6 +264,24 @@ export const App = (): JSX.Element => {
                 body="This is just a basic examination of conscience application; would you like it to default to the St. Pope Pius X examination or would you prefer to build your own?"
                 cancelBtnText="Make my own"
                 confirmBtnText="Use default"
+            />
+            <AlertModal
+                isOpen={isConfirmDeleteModalOpen}
+                onClose={() => setIsConfirmDeleteModalOpen(false)}
+                onConfirm={() => dispatch(deleteQuestion(selectedQuestionId))}
+                header="Confirm Delete"
+                body="Are you sure you want to delete this question?"
+                cancelBtnText="Cancel"
+                confirmBtnText="Delete"
+            />
+            <AlertModal
+                isOpen={isConfirmResetModalOpen}
+                onClose={() => setIsConfirmResetModalOpen(false)}
+                onConfirm={resetQuestions}
+                header="Confirm Reset"
+                body="Are you sure you want to reset all counts?"
+                cancelBtnText="Cancel"
+                confirmBtnText="Reset"
             />
         </Layout>
     )
