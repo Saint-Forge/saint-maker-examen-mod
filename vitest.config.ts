@@ -8,7 +8,8 @@ export default defineConfig({
     test: {
         root: '.',
         globals: true,
-        setupFiles: './setup.js',
+        setupFiles: './vitest-setup.ts',
+        globalSetup: './src/test-globals.ts',
         watch: false,
         environment: 'jsdom',
         coverage: {
