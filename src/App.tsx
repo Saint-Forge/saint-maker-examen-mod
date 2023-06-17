@@ -11,21 +11,23 @@ import {
     HStack,
     Grid,
     GridItem,
-    VStack,
     Circle,
+    Popover,
+    PopoverTrigger,
+    PopoverBody,
+    PopoverContent,
+    Textarea,
 } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import {
     BsSortUp,
     BsArrowReturnLeft,
     BsPencil,
-    BsSortDown,
     BsTrashFill,
     BsArrowLeft,
-    BsArrowUpCircle,
-    BsArrowDownCircle,
     BsArrowLeftCircle,
     BsArrowRightCircle,
+    BsInfoCircle,
 } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlinePlusCircle } from 'react-icons/ai'
@@ -57,6 +59,7 @@ export const App = (): JSX.Element => {
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false)
     const [isConfirmResetModalOpen, setIsConfirmResetModalOpen] = useState(false)
     const [selectedQuestionId, setSelectedQuestionId] = useState('')
+    const [isAmendsEnabled, setIsAmendsEnabled] = useState(false)
 
     useEffect(() => {
         dispatch(getQuestions())
@@ -108,6 +111,9 @@ export const App = (): JSX.Element => {
     }
     const editQuestionText = (question: Question, newText: string) => {
         dispatch(editQuestion({ ...question, text: newText }))
+    }
+    const editQuestionAmends = (question: Question, newText: string) => {
+        dispatch(editQuestion({ ...question, amend: newText }))
     }
     const toggleFilter = () => {
         const nextFilter = currentFilter === 2 ? 0 : currentFilter + 1
@@ -187,6 +193,22 @@ export const App = (): JSX.Element => {
                             />
                         </Flex>
                     )}
+                    <Flex pt="2" justifyContent="center">
+                        <Checkbox onChange={() => setIsAmendsEnabled(!isAmendsEnabled)} mr="2">
+                            {isAmendsEnabled ? 'Disable Amends' : 'Enable Amends'}
+                        </Checkbox>
+                        <Popover>
+                            <PopoverTrigger>
+                                <IconButton size="sm" aria-label="What are amends?" icon={<BsInfoCircle />} />
+                            </PopoverTrigger>
+                            <PopoverContent>
+                                <PopoverBody>
+                                    Amends is an additional feature that has you spell out how you are going to address
+                                    these sins. It only shows up when the &quot;Show Selected&quot; option is selected.
+                                </PopoverBody>
+                            </PopoverContent>
+                        </Popover>
+                    </Flex>
                 </GridItem>
                 <GridItem>
                     <Box pt="2" height="100%">
@@ -201,7 +223,6 @@ export const App = (): JSX.Element => {
                             {displayedQuestions.map((question, index) => (
                                 <Flex direction="row" justifyContent="space-between" pb="2" key={question.id}>
                                     <Box
-                                        display="inline-flex"
                                         w="100%"
                                         borderWidth="1px"
                                         borderRadius="lg"
@@ -209,45 +230,69 @@ export const App = (): JSX.Element => {
                                         p="2"
                                         justifyContent="space-between"
                                         alignItems="center"
+                                        flexDirection="column"
                                     >
-                                        {editing ? (
-                                            <>
-                                                <IconButton
-                                                    mr="2"
-                                                    onClick={() => removeQuestion(question.id)}
-                                                    aria-label="Remove question"
-                                                    icon={<BsTrashFill />}
+                                        <Flex
+                                            w="100%"
+                                            flexDirection="row"
+                                            display="inline-flex"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            pb={isAmendsEnabled && currentFilter === 1 ? 2 : 0}
+                                        >
+                                            {editing ? (
+                                                <>
+                                                    <IconButton
+                                                        mr="2"
+                                                        onClick={() => removeQuestion(question.id)}
+                                                        aria-label="Remove question"
+                                                        icon={<BsTrashFill />}
+                                                    />
+                                                    <Input
+                                                        defaultValue={question.text}
+                                                        onBlur={(e) => editQuestionText(question, e.target.value)}
+                                                    />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Text>{question.text}</Text>
+                                                    <Box ml="2">
+                                                        <HStack>
+                                                            <IconButton
+                                                                variant="outline"
+                                                                aria-label={`sin-${index}-remove`}
+                                                                icon={<BsArrowLeftCircle />}
+                                                                disabled={question.amount === 0}
+                                                                onClick={() =>
+                                                                    changeAmount(question, question.amount - 1)
+                                                                }
+                                                            />
+                                                            <Circle borderWidth="1px" size="40px" color="white">
+                                                                {question.amount}
+                                                            </Circle>
+                                                            <IconButton
+                                                                colorScheme="red"
+                                                                aria-label={`sin-${index}-add`}
+                                                                icon={<BsArrowRightCircle />}
+                                                                onClick={() =>
+                                                                    changeAmount(question, question.amount + 1)
+                                                                }
+                                                            />
+                                                        </HStack>
+                                                    </Box>
+                                                </>
+                                            )}
+                                        </Flex>
+                                        <Flex>
+                                            {isAmendsEnabled && currentFilter === 1 && (
+                                                <Textarea
+                                                    data-testid={`sin-${index}-amends`}
+                                                    defaultValue={question.amend}
+                                                    placeholder="How will you avoid/prevent/obstruct/etc this sin in the future?"
+                                                    onBlur={(e) => editQuestionAmends(question, e.target.value)}
                                                 />
-                                                <Input
-                                                    defaultValue={question.text}
-                                                    onBlur={(e) => editQuestionText(question, e.target.value)}
-                                                />
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Text>{question.text}</Text>
-                                                <Box ml="2">
-                                                    <HStack>
-                                                        <IconButton
-                                                            variant="outline"
-                                                            aria-label="Decrease"
-                                                            icon={<BsArrowLeftCircle />}
-                                                            disabled={question.amount === 0}
-                                                            onClick={() => changeAmount(question, question.amount - 1)}
-                                                        />
-                                                        <Circle borderWidth="1px" size="40px" color="white">
-                                                            {question.amount}
-                                                        </Circle>
-                                                        <IconButton
-                                                            colorScheme="red"
-                                                            aria-label="Increase"
-                                                            icon={<BsArrowRightCircle />}
-                                                            onClick={() => changeAmount(question, question.amount + 1)}
-                                                        />
-                                                    </HStack>
-                                                </Box>
-                                            </>
-                                        )}
+                                            )}
+                                        </Flex>
                                     </Box>
                                 </Flex>
                             ))}

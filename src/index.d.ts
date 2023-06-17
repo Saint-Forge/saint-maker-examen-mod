@@ -8,6 +8,7 @@ interface Question {
   id: string
   text: string
   amount: number
+  amend?: string
 }
 
 interface BeforeInstallPromptEvent extends Event {

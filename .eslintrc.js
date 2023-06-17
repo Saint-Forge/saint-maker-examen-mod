@@ -25,7 +25,15 @@ module.exports = {
         sourceType: 'module',
     },
     extends: ['plugin:react/recommended', 'google', 'plugin:react/jsx-runtime', 'prettier', 'plugin:custom-rules/all'],
-    plugins: ['react', '@typescript-eslint', 'eslint-plugin-no-inline-styles', 'check-file', 'import', 'etc'],
+    plugins: [
+        'react',
+        '@typescript-eslint',
+        'eslint-plugin-no-inline-styles',
+        'check-file',
+        'import',
+        'etc',
+        'unused-imports',
+    ],
     rules: {
         // Naming Conventions
         'check-file/filename-naming-convention': [
@@ -78,6 +86,7 @@ module.exports = {
         ], // Import sorting
         'import/no-default-export': 'error', // Prohibit default export
         'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
+        'unused-imports/no-unused-imports': 'warn',
 
         // Disabled
         '@typescript-eslint/no-unsafe-assignment': 'off',
