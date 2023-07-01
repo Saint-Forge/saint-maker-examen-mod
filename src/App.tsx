@@ -106,7 +106,7 @@ export const App = (): JSX.Element => {
         dispatch(editQuestion({ ...question, amount: amount }))
     }
     const resetQuestions = () => {
-        const resetQuestions = questions.data.map((question: Question) => ({ ...question, amount: 0 }))
+        const resetQuestions = questions.data.map((question: Question) => ({ ...question, amount: 0, amend: '' }))
         dispatch(editAllQuestions(resetQuestions))
     }
     const editQuestionText = (question: Question, newText: string) => {

@@ -90,7 +90,7 @@ describe('Test App.tsx', () => {
         await waitFor(() => expect(screen.getByTestId('sin-0-amends')).toBeInTheDocument())
     })
 
-    it.only('Can amends be submitted and are saved?', async () => {
+    it('Can amends be submitted and are saved?', async () => {
         await arrangeComponent()
 
         await waitFor(() => expect(screen.getByText('Enable Amends')).toBeInTheDocument())
@@ -119,5 +119,47 @@ describe('Test App.tsx', () => {
         fireEvent.click(screen.getByText('Show Selected'))
 
         await waitFor(() => expect(screen.getByTestId('sin-0-amends')).toHaveValue(amendText))
+    })
+
+    it.only('Can amends be cleared with reset?', async () => {
+        const secondAmendText = 'hiding the cookier jar'
+        await act(
+            async () =>
+                await createQuestion(
+                    {
+                        id: '234',
+                        text: 'eating two extra cookies',
+                        amount: 2,
+                        amend: secondAmendText,
+                    },
+                    'questions',
+                ),
+        )
+        await arrangeComponent()
+
+        await waitFor(() => expect(screen.getByText('Enable Amends')).toBeInTheDocument())
+        fireEvent.click(screen.getByText('Enable Amends'))
+        await waitFor(() => expect(screen.getByText('Disable Amends')).toBeInTheDocument())
+
+        fireEvent.click(screen.getByText('Show Selected'))
+
+        await waitFor(() => expect(screen.getByLabelText('sin-0-add')).toBeInTheDocument())
+        await waitFor(() => expect(screen.getByTestId('sin-0-amends')).toHaveValue(secondAmendText))
+
+        fireEvent.click(screen.getByText('Reset'))
+        fireEvent.click(screen.getAllByText('Reset')[1])
+
+        await waitFor(() => expect(screen.queryByLabelText('sin-0-add')).not.toBeInTheDocument())
+
+        fireEvent.click(screen.getByText('Show Unselected'))
+        fireEvent.click(screen.getByText('Show All'))
+
+        await waitFor(() => expect(screen.getByLabelText('sin-0-add')).toBeInTheDocument())
+        fireEvent.click(screen.getByLabelText('sin-0-add'))
+
+        fireEvent.click(screen.getByText('Show Selected'))
+
+        await waitFor(() => expect(screen.getByLabelText('sin-0-add')).toBeInTheDocument())
+        await waitFor(() => expect(screen.getByTestId('sin-0-amends')).toHaveValue(''))
     })
 })
