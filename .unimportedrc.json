@@ -1,4 +1,5 @@
 {
     "ignoreUnresolved": ["virtual:pwa-register"],
+    "ignoreUnimported": ["src/test-globals.ts"],
     "ignoreUnused": ["react-icons"]
 }
