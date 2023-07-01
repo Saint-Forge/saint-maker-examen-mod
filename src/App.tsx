@@ -45,6 +45,7 @@ import defaultQuestions from './defaultQuestions.json'
 
 const filters = ['Show Selected', 'Show Unselected', 'Show All']
 const FIRST_TIME_VISITOR = 'FIRST_TIME_VISITOR'
+const AMENDS_ENABLED = 'AMENDS_ENABLED'
 
 export const App = (): JSX.Element => {
     const addInputRef = useRef<HTMLInputElement | null>(null)
@@ -59,7 +60,7 @@ export const App = (): JSX.Element => {
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false)
     const [isConfirmResetModalOpen, setIsConfirmResetModalOpen] = useState(false)
     const [selectedQuestionId, setSelectedQuestionId] = useState('')
-    const [isAmendsEnabled, setIsAmendsEnabled] = useState(false)
+    const [isAmendsEnabled, setIsAmendsEnabled] = useState((ls.get(AMENDS_ENABLED) ?? 'false') === 'true')
 
     useEffect(() => {
         dispatch(getQuestions())
@@ -73,6 +74,12 @@ export const App = (): JSX.Element => {
     const closeModal = () => {
         ls.set(FIRST_TIME_VISITOR, 'false')
         setIsOpen(false)
+    }
+
+    const toggleAmends = () => {
+        const enableAmends = !isAmendsEnabled
+        ls.set(AMENDS_ENABLED, enableAmends.toString())
+        setIsAmendsEnabled(enableAmends)
     }
 
     const generateDefaultQuestions = (): Question[] =>
@@ -194,7 +201,7 @@ export const App = (): JSX.Element => {
                         </Flex>
                     )}
                     <Flex pt="2" justifyContent="center">
-                        <Checkbox onChange={() => setIsAmendsEnabled(!isAmendsEnabled)} mr="2">
+                        <Checkbox onChange={toggleAmends} mr="2" isChecked={isAmendsEnabled}>
                             {isAmendsEnabled ? 'Disable Amends' : 'Enable Amends'}
                         </Checkbox>
                         <Popover>
